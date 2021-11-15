@@ -1,8 +1,8 @@
-# The Pleo Frontend Challenge
+# The Pleo Localisation Challenge
 
 Here at Pleo we love space. For example, we name all our microservices after
 moons of the solar system. But before you get to the moons, you have to go
-through rockets. Welcome to our frontend challenge!
+through rockets. Welcome to our localisation challenge!
 
 We've built a simple web app that displays information about rocket launches,
 fetched from the unofficial SpaceX API V3 at
@@ -57,12 +57,8 @@ Here is a sketch of the feature:
 
 ### 3. Impress us
 
-This last task is a chance for you to impress us. What you do is really up to
-you - show us your best skills, be creative and try not to spend more than a few
-hours. You can add a new feature (e.g. filtering of lists), or a whole new
-section to the app (explore the API, there is a ton we haven't used yet), add a
-comprehensive test suite, improve the tooling or app's architecture, add
-beautiful animations etc.
+This last task is to show to us your experience with localisation tools for frontend.
+Choose a library like react-intl, react-i18next, lingui or any other. Update the current application with this library so it will be possible to change the language and improve user experiece. Show us as much as possible tools&tricks for localisation that could make the life of the developer easier.
 
 #### Guidelines for Task 3
 
@@ -73,6 +69,7 @@ beautiful animations etc.
 - scope the work so you can finish within a few hours - you can use the PR
   description to list and discuss the things you decided to de-scope, potential
   next steps etc.
+- write down your ideas on what could be done for localisation beyond the scope of the task
 
 ## Practicalities
 
