@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useParams, Link as RouterLink } from "react-router-dom";
 import { format as timeAgo } from "timeago.js";
-import { Watch, MapPin, Navigation, Layers } from "react-feather";
+import { Watch, MapPin, Navigation, Layers, Star } from "react-feather";
 import {
   Flex,
   Heading,
@@ -25,6 +25,7 @@ import { useSpaceX } from "../utils/use-space-x";
 import { formatDateTime } from "../utils/format-date";
 import Error from "./error";
 import Breadcrumbs from "./breadcrumbs";
+import FavoritesContext from "../store/favorites-context";
 
 export default function Launch() {
   let { launchId } = useParams();
@@ -63,6 +64,15 @@ export default function Launch() {
 }
 
 function Header({ launch }) {
+  const favoritesContext = useContext(FavoritesContext);
+  const isFavorite = favoritesContext.launchItems.some(item => item.flight_number === launch.flight_number);
+  const onLaunchClickHandler = launch => {
+    if(isFavorite) {
+      favoritesContext.removeLaunchItem(launch.flight_number);
+    } else {
+      favoritesContext.addLaunchItem(launch);
+    }
+  };
   return (
     <Flex
       bgImage={`url(${launch.links.flickr_images[0]})`}
@@ -108,6 +118,7 @@ function Header({ launch }) {
             Failed
           </Badge>
         )}
+        <Star onClick={() => onLaunchClickHandler(launch)} color='red' fill={isFavorite ? 'red' : 'transparent'}/>
       </Stack>
     </Flex>
   );
