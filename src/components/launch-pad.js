@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useParams } from "react-router-dom";
-import { MapPin, Navigation } from "react-feather";
+import { MapPin, Navigation, Star } from "react-feather";
 import {
   Flex,
   Heading,
@@ -21,6 +21,7 @@ import { useSpaceX } from "../utils/use-space-x";
 import Error from "./error";
 import Breadcrumbs from "./breadcrumbs";
 import { LaunchItem } from "./launches";
+import FavoritesContext from "../store/favorites-context";
 
 export default function LaunchPad() {
   let { launchPadId } = useParams();
@@ -68,6 +69,15 @@ const randomColor = (start = 200, end = 250) =>
   `hsl(${start + end * Math.random()}, 80%, 90%)`;
 
 function Header({ launchPad }) {
+  const favoritesContext = useContext(FavoritesContext);
+  const isFavorite = favoritesContext.launchPadItems.some(item => item.site_id === launchPad.site_id);
+  const onLaunchPadClickHandler = launchPad => {
+    if (isFavorite) {
+      favoritesContext.removeLaunchPadItem(launchPad.site_id);
+    } else {
+      favoritesContext.addLaunchPadItem(launchPad);
+    }
+  };
   return (
     <Flex
       background={`linear-gradient(${randomColor()}, ${randomColor()})`}
@@ -105,6 +115,7 @@ function Header({ launchPad }) {
             Retired
           </Badge>
         )}
+        <Star onClick={() => onLaunchPadClickHandler(launchPad)} color='red' fill={isFavorite ? 'red' : 'transparent'}/>
       </Stack>
     </Flex>
   );

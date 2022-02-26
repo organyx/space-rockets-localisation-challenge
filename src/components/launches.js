@@ -2,12 +2,15 @@ import React from "react";
 import { Badge, Box, Image, SimpleGrid, Text, Flex } from "@chakra-ui/core";
 import { format as timeAgo } from "timeago.js";
 import { Link } from "react-router-dom";
+import { Star } from "react-feather";
 
 import { useSpaceXPaginated } from "../utils/use-space-x";
 import { formatDate } from "../utils/format-date";
 import Error from "./error";
 import Breadcrumbs from "./breadcrumbs";
 import LoadMoreButton from "./load-more-button";
+import { useContext } from 'react';
+import FavoritesContext from '../store/favorites-context';
 
 const PAGE_SIZE = 12;
 
@@ -45,28 +48,38 @@ export default function Launches() {
   );
 }
 
-export function LaunchItem({ launch }) {
+export function LaunchItem({ launch, display }) {
+  const favoritesContext = useContext(FavoritesContext);
+  const isFavorite = favoritesContext.launchItems.some(item => item.flight_number === launch.flight_number);
+  const onLaunchClickHandler = () => {
+    if (isFavorite) {
+      favoritesContext.removeLaunchItem(launch.flight_number);
+    } else {
+      favoritesContext.addLaunchItem(launch);
+    }
+  };
+
   return (
     <Box
-      as={Link}
-      to={`/launches/${launch.flight_number.toString()}`}
       boxShadow="md"
       borderWidth="1px"
       rounded="lg"
       overflow="hidden"
       position="relative"
     >
-      <Image
-        src={
-          launch.links.flickr_images[0]?.replace("_o.jpg", "_z.jpg") ??
-          launch.links.mission_patch_small
-        }
-        alt={`${launch.mission_name} launch`}
-        height={["200px", null, "300px"]}
-        width="100%"
-        objectFit="cover"
-        objectPosition="bottom"
-      />
+      <Link to={`/launches/${launch.flight_number.toString()}`}>
+        <Image
+          src={
+            launch.links.flickr_images[0]?.replace("_o.jpg", "_z.jpg") ??
+            launch.links.mission_patch_small
+          }
+          alt={`${launch.mission_name} launch`}
+          height={display === 'drawer' ? ['100px'] : ['200px', null, '300px']}
+          width="100%"
+          objectFit="cover"
+          objectPosition="bottom"
+        />
+      </Link>
 
       <Image
         position="absolute"
@@ -78,44 +91,47 @@ export function LaunchItem({ launch }) {
         objectPosition="bottom"
       />
 
-      <Box p="6">
-        <Box d="flex" alignItems="baseline">
-          {launch.launch_success ? (
-            <Badge px="2" variant="solid" variantColor="green">
-              Successful
-            </Badge>
-          ) : (
-            <Badge px="2" variant="solid" variantColor="red">
-              Failed
-            </Badge>
-          )}
-          <Box
-            color="gray.500"
-            fontWeight="semibold"
-            letterSpacing="wide"
-            fontSize="xs"
-            textTransform="uppercase"
-            ml="2"
-          >
-            {launch.rocket.rocket_name} &bull; {launch.launch_site.site_name}
+      <Box d="flex" alignItems="center" justifyContent="space-between">
+        <Box p="6" as={Link} to={`/launches/${launch.flight_number.toString()}`}>
+          <Box d="flex" alignItems="baseline">
+            {launch.launch_success ? (
+              <Badge px="2" variant="solid" variantColor="green">
+                Successful
+              </Badge>
+            ) : (
+              <Badge px="2" variant="solid" variantColor="red">
+                Failed
+              </Badge>
+            )}
+            <Box
+              color="gray.500"
+              fontWeight="semibold"
+              letterSpacing="wide"
+              fontSize="xs"
+              textTransform="uppercase"
+              ml="2"
+            >
+              {launch.rocket.rocket_name} &bull; {launch.launch_site.site_name}
+            </Box>
           </Box>
-        </Box>
 
-        <Box
-          mt="1"
-          fontWeight="semibold"
-          as="h4"
-          lineHeight="tight"
-          isTruncated
-        >
-          {launch.mission_name}
+          <Box
+            mt="1"
+            fontWeight="semibold"
+            as="h4"
+            lineHeight="tight"
+            isTruncated
+          >
+            {launch.mission_name}
+          </Box>
+          <Flex>
+            <Text fontSize="sm">{formatDate(launch.launch_date_utc)} </Text>
+            <Text color="gray.500" ml="2" fontSize="sm">
+              {timeAgo(launch.launch_date_utc)}
+            </Text>
+          </Flex>
         </Box>
-        <Flex>
-          <Text fontSize="sm">{formatDate(launch.launch_date_utc)} </Text>
-          <Text color="gray.500" ml="2" fontSize="sm">
-            {timeAgo(launch.launch_date_utc)}
-          </Text>
-        </Flex>
+        <Star cursor="pointer" onClick={onLaunchClickHandler} color="red" fill={isFavorite ? 'red' : 'transparent'} />
       </Box>
     </Box>
   );

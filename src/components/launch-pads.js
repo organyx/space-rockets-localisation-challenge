@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Badge, Box, SimpleGrid, Text } from "@chakra-ui/core";
 import { Link } from "react-router-dom";
 
@@ -6,6 +6,8 @@ import Error from "./error";
 import Breadcrumbs from "./breadcrumbs";
 import LoadMoreButton from "./load-more-button";
 import { useSpaceXPaginated } from "../utils/use-space-x";
+import FavoritesContext from "../store/favorites-context";
+import { Star } from "react-feather";
 
 const PAGE_SIZE = 12;
 
@@ -41,18 +43,30 @@ export default function LaunchPads() {
   );
 }
 
-function LaunchPadItem({ launchPad }) {
+export function LaunchPadItem({ launchPad }) {
+  const favoritesContext = useContext(FavoritesContext);
+  const isFavorite = favoritesContext.launchPadItems.some(item => item.site_id === launchPad.site_id);
+  const onLaunchPadClickHandler = () => {
+    if (isFavorite) {
+      favoritesContext.removeLaunchPadItem(launchPad.site_id);
+    } else {
+      favoritesContext.addLaunchPadItem(launchPad);
+    }
+  };
   return (
     <Box
-      as={Link}
-      to={`/launch-pads/${launchPad.site_id}`}
       boxShadow="md"
       borderWidth="1px"
       rounded="lg"
       overflow="hidden"
       position="relative"
+      d="flex"
+      justifyContent="space-between"
+      alignItems="center"
     >
-      <Box p="6">
+      <Box 
+        p="6" as={Link}
+        to={`/launch-pads/${launchPad.site_id}`}>
         <Box d="flex" alignItems="baseline">
           {launchPad.status === "active" ? (
             <Badge px="2" variant="solid" variantColor="green">
@@ -89,6 +103,7 @@ function LaunchPadItem({ launchPad }) {
           {launchPad.vehicles_launched.join(", ")}
         </Text>
       </Box>
+      <Star cursor="pointer" onClick={onLaunchPadClickHandler} color="red" fill={isFavorite ? 'red' : 'transparent'} />
     </Box>
   );
 }
