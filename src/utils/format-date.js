@@ -15,6 +15,19 @@ export function formatDateTime(timestamp) {
     hour: "numeric",
     minute: "numeric",
     second: "numeric",
+    timeZone: "UTC",
+    timeZoneName: "short",
+  }).format(new Date(timestamp));
+}
+
+export function formatDateTimeLocal(timestamp) {
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
     timeZoneName: "short",
   }).format(new Date(timestamp));
 }
