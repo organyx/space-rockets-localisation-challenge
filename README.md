@@ -46,3 +46,9 @@ All data is fetched from the unofficial SpaceX API V3 at
   ([Feather icons](https://feathericons.com/) wrapper for React)
 - [timeago.js](https://timeago.org/) - Tiny library to display human-readable
   relative time difference
+
+
+## Deployed challenge app can be found
+- [Vercel](https://space-rockets-localisation-challenge.vercel.app/) Default State
+- [Vercel](https://space-rockets-localisation-challenge-qnc4xvlqr-organyx.vercel.app/) App incorporates Dummy Data for Launches to have some form of functionality
+- [Netlify](https://agitated-rosalind-f8abf6.netlify.app/) Default State
