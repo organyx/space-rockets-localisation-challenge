@@ -16,9 +16,11 @@ import { LaunchItem } from './launches';
 import { LaunchPadItem } from './launch-pads';
 import { useContext } from 'react';
 import FavoritesContext from '../store/favorites-context';
+import { useTranslation } from 'react-i18next';
 
 function FavoritesDrawer() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { t } = useTranslation();
   const btnRef = React.useRef();
   const favoritesContext = useContext(FavoritesContext);
   const hasLaunchItems = favoritesContext.launchItems.length > 0;
@@ -26,18 +28,18 @@ function FavoritesDrawer() {
   return (
     <>
       <Button ref={btnRef} colorScheme="teal" onClick={onOpen}>
-        Favorites
+        {t('favoritesDrawer.title')}
       </Button>
       <Drawer isOpen={isOpen} placement="right" onClose={onClose} finalFocusRef={btnRef}>
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>Favorites</DrawerHeader>
+          <DrawerHeader>{t('favoritesDrawer.title')}</DrawerHeader>
 
           <DrawerBody overflow="scroll">
             {hasLaunchItems && (
               <Box>
-                <Text fontSize="lg">Favorite Launches</Text>
+                <Text fontSize="lg">{t('favoritesDrawer.favoriteLaunches')}</Text>
                 {favoritesContext.launchItems.flat().map(launch => (
                   <LaunchItem launch={launch} key={launch.flight_number} display="drawer" />
                 ))}
@@ -45,7 +47,7 @@ function FavoritesDrawer() {
             )}
             {hasLaunchPadItems && (
               <Box>
-                <Text fontSize="lg">Favorite Launch Pads</Text>
+                <Text fontSize="lg">{t('favoritesDrawer.favoriteLaunchPads')}</Text>
                 {favoritesContext.launchPadItems.flat().map(launchPad => (
                   <LaunchPadItem launchPad={launchPad} key={launchPad.site_id} />
                 ))}
@@ -53,13 +55,13 @@ function FavoritesDrawer() {
             )}
 
             {!hasLaunchItems && !hasLaunchPadItems && (
-              <Text fontSize="lg">Oops, nothing here. Guess it's time to go and favorite something</Text>
+              <Text fontSize="lg">{t('favoritesDrawer.emptyBody')}</Text>
             )}
           </DrawerBody>
 
           <DrawerFooter>
             <Button variant="outline" mr={3} onClick={onClose}>
-              Close
+              {t('favoritesDrawer.btnClose')}
             </Button>
           </DrawerFooter>
         </DrawerContent>
