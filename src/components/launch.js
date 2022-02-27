@@ -22,17 +22,15 @@ import {
   Tooltip
 } from "@chakra-ui/core";
 
-import { useSpaceX } from "../utils/use-space-x";
 import { formatDateTime, formatDateTimeLocal } from "../utils/format-date";
-import Error from "./error";
 import Breadcrumbs from "./breadcrumbs";
 import FavoritesContext from "../store/favorites-context";
+import dummyData from '../utils/dummy-launches.json';
 
 export default function Launch() {
   let { launchId } = useParams();
-  const { data: launch, error } = useSpaceX(`/launches/${launchId}`);
-
-  if (error) return <Error />;
+  console.log(dummyData.data)
+  let launch = dummyData.data.find(launch => launch.flight_number === parseInt(launchId));
   if (!launch) {
     return (
       <Flex justifyContent="center" alignItems="center" minHeight="50vh">
@@ -58,7 +56,7 @@ export default function Launch() {
           {launch.details}
         </Text>
         <Video launch={launch} />
-        <Gallery images={launch.links.flickr_images} />
+        <Gallery images={[launch.links.mission_patch_small]} />
       </Box>
     </div>
   );
@@ -76,7 +74,7 @@ function Header({ launch }) {
   };
   return (
     <Flex
-      bgImage={`url(${launch.links.flickr_images[0]})`}
+      bgImage={`url(${launch.links.mission_patch_small})`}
       bgPos="center"
       bgSize="cover"
       bgRepeat="no-repeat"
@@ -243,7 +241,7 @@ function Gallery({ images }) {
     <SimpleGrid my="6" minChildWidth="350px" spacing="4">
       {images.map((image) => (
         <a href={image} key={image}>
-          <Image src={image.replace("_o.jpg", "_z.jpg")} />
+          <Image src={image} />
         </a>
       ))}
     </SimpleGrid>

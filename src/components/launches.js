@@ -12,6 +12,8 @@ import LoadMoreButton from "./load-more-button";
 import { useContext } from 'react';
 import FavoritesContext from '../store/favorites-context';
 
+import dummyData from '../utils/dummy-launches.json';
+
 const PAGE_SIZE = 12;
 
 export default function Launches() {
@@ -24,6 +26,7 @@ export default function Launches() {
     }
   );
   console.log(data, error);
+  console.log('dummy launches', dummyData);
   return (
     <div>
       <Breadcrumbs
@@ -31,8 +34,8 @@ export default function Launches() {
       />
       <SimpleGrid m={[2, null, 6]} minChildWidth="350px" spacing="4">
         {error && <Error />}
-        {data &&
-          data
+        {dummyData.data &&
+          dummyData.data
             .flat()
             .map((launch) => (
               <LaunchItem launch={launch} key={launch.flight_number} />
@@ -49,6 +52,7 @@ export default function Launches() {
 }
 
 export function LaunchItem({ launch, display }) {
+  console.log('launch', launch);
   const favoritesContext = useContext(FavoritesContext);
   const isFavorite = favoritesContext.launchItems.some(item => item.flight_number === launch.flight_number);
   const onLaunchClickHandler = () => {
@@ -70,7 +74,6 @@ export function LaunchItem({ launch, display }) {
       <Link to={`/launches/${launch.flight_number.toString()}`}>
         <Image
           src={
-            launch.links.flickr_images[0]?.replace("_o.jpg", "_z.jpg") ??
             launch.links.mission_patch_small
           }
           alt={`${launch.mission_name} launch`}
