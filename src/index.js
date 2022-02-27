@@ -5,6 +5,8 @@ import { ThemeProvider, CSSReset } from "@chakra-ui/core";
 
 import App from "./components/app";
 
+import './i18n'
+
 ReactDOM.render(
   <React.StrictMode>
     <Router>
